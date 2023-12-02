@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*-coding: utf-8 -*-
 """
+Day 1: Trebuchet?!
+
 Task:
-Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
+What is the sum of all of the calibration values?
 
 Detailed description:
 https://adventofcode.com/2023/day/1
