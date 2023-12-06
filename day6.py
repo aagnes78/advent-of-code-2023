@@ -17,6 +17,7 @@ The code below assumes it has been saved locally.
 
 """
 import re
+import time
 
 def race(racetime, distance):
     goodrace_counter = 0
@@ -45,6 +46,9 @@ print("Part 1 answer:", answer)
 racetime = int("".join(re.findall(r"\d+", timesline)))
 dist_to_beat = int("".join(re.findall(r"\d+", dists_line)))
 
+start = time.time()
 answer = race(racetime, dist_to_beat)
-print("Part 2:", answer)
+end = time.time()
+print("Part 2 answer:", answer)
+print("and it took", end-start, "seconds to calculate Part 2")
 
