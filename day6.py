@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*-coding: utf-8 -*-
 """
+Day 6: Wait For It
+
 Task:
 Determine the number of ways you could beat the record in each race. 
 What do you get if you multiply these numbers together?
@@ -17,7 +19,7 @@ There are 2 solutions implemented, runtime differs significantly for Part 2.
 
 Naive approach:
 Make the calculation depending on charging time, for each possibility, 
-and count whatever is above the desired distance.
+and count the number of cases where the result is above the desired distance.
 
 Informed approach:
 Solve the quadratic inequality:
