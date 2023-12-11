@@ -27,7 +27,7 @@ def find_type(hand):
         else:                      # full house (3,2)
             return 4
     elif len(counter) == 3:
-        if 3 in counter.values():  # three of a kind (3,1)
+        if 3 in counter.values():  # three of a kind (3,1,1)
             return 3
         else:                      # two pair (2,2,1)
             return 2
@@ -61,6 +61,10 @@ def find_type_withjoker(hand):
 
 
 def getval_card(card, with_joker=False):
+    """Get the value of a specific card.
+    The boolean with_joker is set to False by default, returning 11 for the card 'J'.
+    If with_joker is set to True, the value of 'J' is the lowest: 1.
+    """
     cardvalues = {'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
     if with_joker == True:
         cardvalues['J'] = 1
@@ -71,6 +75,10 @@ def getval_card(card, with_joker=False):
 
 
 def cmp_cards(card1, card2, with_joker=False):
+    """Comparing the value of two cards.
+    Calls the function getval(card), passes also the boolean with_joker to it,
+    to accommodate the different value of 'J' depending on the usage of joker.
+    """
     val1, val2 = getval_card(card1, with_joker), getval_card(card2, with_joker)
     if val1 < val2:
         return -1
@@ -80,33 +88,27 @@ def cmp_cards(card1, card2, with_joker=False):
         return 0
 
 
-def cmp_hands(hand1, hand2, with_joker=False):
+def cmp_hands(hand1, hand2, find_type_func=find_type, with_joker=False):
+    """Comparing hands, based on their types,
+    comparing cards left-to-write if the types tie.
+    """
     if hand1 == hand2:   # exact same hands
         return 0
-    elif find_type(hand1) < find_type(hand2):
+    elif find_type_func(hand1) < find_type_func(hand2):
         return -1
-    elif find_type(hand1) > find_type(hand2):
+    elif find_type_func(hand1) > find_type_func(hand2):
         return 1
     else:    # the types are equals, but the hands are not
         for i in range(5):    # hands are 5-char long string
-            cmp = cmp_cards(hand1[i], hand2[i])
+            cmp = cmp_cards(hand1[i], hand2[i], with_joker)
             if cmp != 0:
                 return cmp
 
 
 def cmp_hands_withjoker(hand1, hand2):
-    if hand1 == hand2:   # exact same hands
-        return 0
-    elif find_type_withjoker(hand1) < find_type_withjoker(hand2):
-        return -1
-    elif find_type_withjoker(hand1) > find_type_withjoker(hand2):
-        return 1
-    else:    # the types are equals, but the hands are not
-        for i in range(5):    # hands are 5-char long string
-            ###cmp = cmp_cards_withjoker(hand1[i], hand2[i])
-            cmp = cmp_cards(hand1[i], hand2[i], with_joker=True)
-            if cmp != 0:
-                return cmp
+    """Comparing hands, with usage of the joker card (Part 2)
+    """
+    return cmp_hands(hand1, hand2, find_type_withjoker, with_joker=True)
 
 
 cardsdict = {}
@@ -116,12 +118,15 @@ for line in file:
     if len(line) > 1:
         hand, bid = line.strip().split()
         if hand in cardsdict:
-            # note: there was none in the input
+            # note: no, there was no duplicate hand in the input
             print("OHOHOHOOO", hand, bid)
             raise KeyError("duplicate key")
         else:
             cardsdict[hand] = int(bid)
 
+file.close()
+
+# using python's built-in sorted() function with custom-made compare function
 hands_sortedlist = sorted(cardsdict, key=(cmp_to_key(cmp_hands)))
 
 winnings = 0
@@ -130,7 +135,8 @@ for index, card in enumerate(hands_sortedlist):
 
 print("Part 1 - the total winnings:", winnings)
 
-# Part 2
+# Part 2 - with the usage of the joker card
+# needs an altered version of the custom-made compare function
 hands_sortedlist_p2 = sorted(cardsdict, key=(cmp_to_key(cmp_hands_withjoker)))
 
 winnings_p2 = 0
